@@ -1,0 +1,17 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "com.google.inject:guice:${GUICE_VERSION}"
+    compile "com.google.guava:guava:${GUAVA_VERSION}"
+    compile "org.modelmapper:modelmapper:${MODEL_MAPPER_VERSION}"
+    testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.mockito:mockito-all:${MOCKITO_VERSION}"
+    testCompile "com.google.truth:truth:${TRUTH_VERSION}"
+}
