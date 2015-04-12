@@ -45,13 +45,56 @@ public class ModelMapperSampleTest {
         Order order = createTestOrder();
         OrderDto result;
 
-        long start = System.nanoTime();
+        // warm up
+        for (int i = 0; i < MAX_COUNT; i++) {
+            result = target.convertNew(order);
+        }
+        result = new OrderDto();
+        for (int i = 0; i < MAX_COUNT; i++) {
+            target.convert(order, result);
+        }
 
+        // measure process time.
+        long start = System.currentTimeMillis();
+
+        // create Instance and Convert.
         for (int i = 0; i < MAX_COUNT; i++) {
             result = target.convertNew(order);
         }
 
-        long end = System.nanoTime();
-        System.out.println("testMapPerformance():" + String.valueOf(end - start));
+        long end = System.currentTimeMillis();
+        System.out.println("testConvertNew():" + String.valueOf(end - start));
+
+        start = System.currentTimeMillis();
+
+        // convert to prepared Instance.
+        for (int i = 0; i < MAX_COUNT; i++) {
+            target.convert(order, result);
+        }
+
+        end = System.currentTimeMillis();
+        System.out.println("testConvert()   :" + String.valueOf(end - start));
+
+        target.prepareMapper();
+
+        start = System.currentTimeMillis();
+
+        // create Instance and Convert.
+        for (int i = 0; i < MAX_COUNT; i++) {
+            result = target.convertNew(order);
+        }
+
+        end = System.currentTimeMillis();
+        System.out.println("testConvertNew():" + String.valueOf(end - start));
+
+        start = System.currentTimeMillis();
+
+        // convert to prepared Instance.
+        for (int i = 0; i < MAX_COUNT; i++) {
+            target.convert(order, result);
+        }
+
+        end = System.currentTimeMillis();
+        System.out.println("testConvert()   :" + String.valueOf(end - start));
     }
 }
