@@ -1,7 +1,7 @@
 package com.github.shionit.chronos.model;
 
 /**
- * Created by itoshion on 2015/04/10.
+ * Created by @shionit on 2015/04/10.
  */
 public class Name {
     private String firstName;

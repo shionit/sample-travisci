@@ -4,9 +4,11 @@ import com.github.shionit.chronos.model.Order;
 import com.github.shionit.chronos.model.OrderDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.spi.MatchingStrategy;
 
 /**
- * Created by itoshion on 2015/04/10.
+ * Created by @shionit on 2015/04/10.
  */
 public class ModelMapperSample {
 
@@ -16,15 +18,15 @@ public class ModelMapperSample {
         return modelMapper;
     }
 
-    public OrderDto convertNew(Order order) {
+    public OrderDto convertNew(final Order order) {
         return modelMapper.map(order, OrderDto.class);
     }
 
-    public void convert(Order order, OrderDto dto) {
+    public void convert(final Order order, final OrderDto dto) {
         modelMapper.map(order, dto);
     }
 
-    public void prepareMapper() {
+    public void prepareMapper(final MatchingStrategy strategy) {
         modelMapper.addMappings(new PropertyMap<Order, OrderDto>() {
             @Override
             protected void configure() {
@@ -34,9 +36,7 @@ public class ModelMapperSample {
                 map().setCustomerLastName(source.getCustomer().getName().getLastName());
             }
         });
-    }
-
-    public static void main(String[] args) {
-        System.out.println("Hello Java!");
+        modelMapper.getConfiguration().setMatchingStrategy(strategy);
+        modelMapper.validate();
     }
 }
