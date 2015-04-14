@@ -10,7 +10,7 @@ import org.modelmapper.spi.MatchingStrategy;
 /**
  * Created by @shionit on 2015/04/10.
  */
-public class ModelMapperSample {
+public class ModelMapperService implements MappingService {
 
     private ModelMapper modelMapper = new ModelMapper();
 
@@ -18,10 +18,12 @@ public class ModelMapperSample {
         return modelMapper;
     }
 
+    @Override
     public OrderDto convertNew(final Order order) {
         return modelMapper.map(order, OrderDto.class);
     }
 
+    @Override
     public void convert(final Order order, final OrderDto dto) {
         modelMapper.map(order, dto);
     }
