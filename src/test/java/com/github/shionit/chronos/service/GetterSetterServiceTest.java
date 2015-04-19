@@ -18,7 +18,7 @@ public class GetterSetterServiceTest {
     public void testConvertNew() throws Exception {
         final Order order = createTestOrder();
 
-        OrderDto result = getset.convertNew(order);
+        OrderDto result = getset.convert(order);
 
         assertEquals(order.getCustomer().getName().getFirstName(), result.getCustomerFirstName());
         assertEquals(order.getCustomer().getName().getLastName(), result.getCustomerLastName());

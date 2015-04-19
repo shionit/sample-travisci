@@ -18,7 +18,7 @@ public class ModelMapperServiceTest {
     public void testConvertNew() {
         final Order order = createTestOrder();
 
-        OrderDto result = target.convertNew(order);
+        OrderDto result = target.convert(order);
 
         assertEquals(order.getCustomer().getName().getFirstName(), result.getCustomerFirstName());
         assertEquals(order.getCustomer().getName().getLastName(), result.getCustomerLastName());

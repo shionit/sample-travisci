@@ -48,7 +48,7 @@ public class MappingPerformanceTest {
 
         // create Instance and Convert.
         for (int i = 0; i < MAX_COUNT; i++) {
-            result = mapper.convertNew(order);
+            result = mapper.convert(order);
         }
 
         stopwatch.stop();
@@ -72,7 +72,7 @@ public class MappingPerformanceTest {
 
         // create Instance and Convert.
         for (int i = 0; i < MAX_COUNT; i++) {
-            result = mapper.convertNew(order);
+            result = mapper.convert(order);
         }
 
         result = new OrderDto();

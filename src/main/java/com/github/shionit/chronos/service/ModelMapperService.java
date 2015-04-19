@@ -19,7 +19,7 @@ public class ModelMapperService implements MappingService {
     }
 
     @Override
-    public OrderDto convertNew(final Order order) {
+    public OrderDto convert(final Order order) {
         return modelMapper.map(order, OrderDto.class);
     }
 

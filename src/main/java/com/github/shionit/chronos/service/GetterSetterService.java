@@ -9,7 +9,7 @@ import com.github.shionit.chronos.model.OrderDto;
 public class GetterSetterService implements MappingService {
 
     @Override
-    public final OrderDto convertNew(final Order order) {
+    public final OrderDto convert(final Order order) {
         OrderDto dto = new OrderDto();
         dto.setBillingCity(order.getBillingAddress().getCity());
         dto.setBillingStreet(order.getBillingAddress().getStreet());
