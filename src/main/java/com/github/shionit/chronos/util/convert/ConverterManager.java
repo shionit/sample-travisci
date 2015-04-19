@@ -2,7 +2,6 @@ package com.github.shionit.chronos.util.convert;
 
 import org.modelmapper.internal.util.Assert;
 import org.modelmapper.internal.util.TypeResolver;
-import sun.swing.StringUIClientPropertyKey;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -20,7 +19,7 @@ public class ConverterManager {
     private ConverterManager() {
     }
 
-    public ConverterManager getInstance() {
+    public static ConverterManager getInstance() {
         return INSTANCE;
     }
 
