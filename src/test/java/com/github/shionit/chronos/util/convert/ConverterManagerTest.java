@@ -1,5 +1,10 @@
 package com.github.shionit.chronos.util.convert;
 
+import com.github.shionit.chronos.model.Customer;
+import com.github.shionit.chronos.model.Name;
+import com.github.shionit.chronos.model.Order;
+import com.github.shionit.chronos.model.OrderDto;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,6 +14,12 @@ import static org.junit.Assert.*;
  */
 public class ConverterManagerTest {
 
+    @Before
+    public void setUp() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+        manager.clear();
+    }
+
     @Test
     public void testGetInstance() throws Exception {
         ConverterManager manager = ConverterManager.getInstance();
@@ -16,22 +27,139 @@ public class ConverterManagerTest {
     }
 
     @Test
-    public void testAddConverter() throws Exception {
+    public void testAddConverter_normal_defaultName() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+        Converter converter = new MockConverterA();
 
+        manager.addConverter(converter);
+
+        Converter result = manager.getConverter(Customer.class, Name.class);
+        assertNotNull(result);
+        assertEquals(converter, result);
     }
 
     @Test
-    public void testAddConverter1() throws Exception {
+    public void testAddConverter_normal_testName() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+        Converter converter = new MockConverterA();
 
+        manager.addConverter(converter, "testConverter");
+
+        Converter result = manager.getConverter(Customer.class, Name.class, "testConverter");
+        assertNotNull(result);
+        assertEquals(converter, result);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testAddConverter_converter_isNull_error() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+
+        manager.addConverter(null);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testAddConverter_converter_duplicate_error() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+        Converter converter1 = new MockConverterA();
+        Converter converter2 = new MockConverterB();
+
+        manager.addConverter(converter1);
+        manager.addConverter(converter2);
     }
 
     @Test
-    public void testGetConverter() throws Exception {
+    public void testAddConverter_normal_different_name() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+        Converter converter1 = new MockConverterA();
+        Converter converter2 = new MockConverterB();
 
+        manager.addConverter(converter1, "converterA");
+        manager.addConverter(converter2, "converterB");
+
+        Converter resultA = manager.getConverter(Customer.class, Name.class, "converterA");
+        assertNotNull(resultA);
+        assertEquals(converter1, resultA);
+        Converter resultB = manager.getConverter(Customer.class, Name.class, "converterB");
+        assertNotNull(resultB);
+        assertEquals(converter2, resultB);
     }
 
     @Test
-    public void testGetConverter1() throws Exception {
+    public void testAddConverter_normal_different_class() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+        Converter<Customer, Name> converter1 = new MockConverterA();
+        Converter<Order, OrderDto> converter2 = new MockConverterC();
 
+        manager.addConverter(converter1);
+        manager.addConverter(converter2);
+
+        Converter<Customer, Name> resultA = manager.getConverter(Customer.class, Name.class);
+        assertNotNull(resultA);
+        assertEquals(converter1, resultA);
+        Converter<Order, OrderDto> resultB = manager.getConverter(Order.class, OrderDto.class);
+        assertNotNull(resultB);
+        assertEquals(converter2, resultB);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testGetConverter_sourceClass_isNull_error() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+        manager.getConverter(null, Name.class);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testGetConverter_destClass_isNull_error() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+        manager.getConverter(Customer.class, null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testGetConverter_name_isNull_error() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+        manager.getConverter(Customer.class, Name.class, null);
+    }
+
+    @Test
+    public void testGetConverter_another_converter() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+        Converter<Customer, Name> converter1 = new MockConverterA();
+
+        manager.addConverter(converter1);
+
+        Converter<Order, OrderDto> result = manager.getConverter(Order.class, OrderDto.class);
+        assertNull(result);
+    }
+
+    public class MockConverterA implements Converter<Customer, Name> {
+        @Override
+        public void convert(Customer src, Name dest) {
+        }
+
+        @Override
+        public Name convert(Customer src) {
+            return null;
+        }
+    }
+
+    public class MockConverterB implements Converter<Customer, Name> {
+        @Override
+        public void convert(Customer src, Name dest) {
+        }
+
+        @Override
+        public Name convert(Customer src) {
+            return null;
+        }
+    }
+
+    public class MockConverterC implements Converter<Order, OrderDto> {
+        @Override
+        public void convert(Order src, OrderDto dest) {
+        }
+
+        @Override
+        public OrderDto convert(Order src) {
+            return null;
+        }
     }
 }

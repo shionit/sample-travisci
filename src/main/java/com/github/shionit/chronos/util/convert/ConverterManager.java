@@ -1,10 +1,10 @@
 package com.github.shionit.chronos.util.convert;
 
-import org.modelmapper.internal.util.Assert;
 import org.modelmapper.internal.util.TypeResolver;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -28,7 +28,7 @@ public class ConverterManager {
     }
 
     public final <S, D> void addConverter(final Converter<S, D> converter, String name) {
-        Assert.notNull(converter, "converter");
+        Objects.requireNonNull(converter, "converter");
         if (name == null || name.isEmpty()) {
             name = DEFAULT_CONVERTER_NAME;
         }
@@ -40,14 +40,20 @@ public class ConverterManager {
         }
     }
 
-    public final Converter<?, ?> getConverter(final Class<?> sourceClass, final Class<?> destClass) {
+    public final <S, D> Converter<S, D> getConverter(final Class<S> sourceClass, final Class<D> destClass) {
         return getConverter(sourceClass, destClass, DEFAULT_CONVERTER_NAME);
     }
 
-    public final Converter<?, ?> getConverter(final Class<?> sourceClass, final Class<?> destClass, final String name) {
-        Assert.notNull(name, "name");
+    public final <S, D> Converter<S, D> getConverter(final Class<S> sourceClass, final Class<D> destClass, final String name) {
+        Objects.requireNonNull(sourceClass, "sourceClass");
+        Objects.requireNonNull(destClass, "destClass");
+        Objects.requireNonNull(name, "name");
         ConverterCacheKey key = new ConverterCacheKey(sourceClass, destClass, name);
         return cache.get(key);
+    }
+
+    protected final void clear() {
+        cache.clear();
     }
 
     private class ConverterCacheKey implements Serializable {
