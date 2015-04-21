@@ -3,7 +3,6 @@ package com.github.shionit.chronos.util.convert;
 import org.modelmapper.internal.util.TypeResolver;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,8 +12,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConverterManager {
 
     private static final ConverterManager INSTANCE = new ConverterManager();
-    private static final Map<ConverterCacheKey, Converter> cache = new ConcurrentHashMap<>();
+
     private static final String DEFAULT_CONVERTER_NAME = "default";
+
+    @SuppressWarnings("rawtypes")
+    private static final ConcurrentHashMap<ConverterCacheKey, Converter> cache = new ConcurrentHashMap<>();
 
     private ConverterManager() {
     }
@@ -44,6 +46,7 @@ public class ConverterManager {
         return getConverter(sourceClass, destClass, DEFAULT_CONVERTER_NAME);
     }
 
+    @SuppressWarnings("unchecked")
     public final <S, D> Converter<S, D> getConverter(final Class<S> sourceClass, final Class<D> destClass, final String name) {
         Objects.requireNonNull(sourceClass, "sourceClass");
         Objects.requireNonNull(destClass, "destClass");
@@ -56,6 +59,7 @@ public class ConverterManager {
         cache.clear();
     }
 
+    @SuppressWarnings("serial")
     private class ConverterCacheKey implements Serializable {
         private final Class<?> sourceClass;
         private final Class<?> destClass;

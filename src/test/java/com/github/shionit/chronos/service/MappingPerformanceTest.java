@@ -37,6 +37,11 @@ public class MappingPerformanceTest {
 
         performConvert(order, modelmapper);
 
+        modelmapper.prepareConverter();
+        System.out.println("prepareConverter(STRICT)*********");
+
+        performConvert(order, modelmapper);
+
         System.out.println("simple getter/setter()*********");
 
         performConvert(order, getset);

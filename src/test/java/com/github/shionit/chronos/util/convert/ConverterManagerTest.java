@@ -29,7 +29,7 @@ public class ConverterManagerTest {
     @Test
     public void testAddConverter_normal_defaultName() throws Exception {
         ConverterManager manager = ConverterManager.getInstance();
-        Converter converter = new MockConverterA();
+        MockConverterA converter = new MockConverterA();
 
         manager.addConverter(converter);
 
@@ -41,7 +41,7 @@ public class ConverterManagerTest {
     @Test
     public void testAddConverter_normal_testName() throws Exception {
         ConverterManager manager = ConverterManager.getInstance();
-        Converter converter = new MockConverterA();
+        MockConverterA converter = new MockConverterA();
 
         manager.addConverter(converter, "testConverter");
 
@@ -60,8 +60,8 @@ public class ConverterManagerTest {
     @Test(expected = IllegalStateException.class)
     public void testAddConverter_converter_duplicate_error() throws Exception {
         ConverterManager manager = ConverterManager.getInstance();
-        Converter converter1 = new MockConverterA();
-        Converter converter2 = new MockConverterB();
+        MockConverterA converter1 = new MockConverterA();
+        MockConverterB converter2 = new MockConverterB();
 
         manager.addConverter(converter1);
         manager.addConverter(converter2);
@@ -70,8 +70,8 @@ public class ConverterManagerTest {
     @Test
     public void testAddConverter_normal_different_name() throws Exception {
         ConverterManager manager = ConverterManager.getInstance();
-        Converter converter1 = new MockConverterA();
-        Converter converter2 = new MockConverterB();
+        MockConverterA converter1 = new MockConverterA();
+        MockConverterB converter2 = new MockConverterB();
 
         manager.addConverter(converter1, "converterA");
         manager.addConverter(converter2, "converterB");
