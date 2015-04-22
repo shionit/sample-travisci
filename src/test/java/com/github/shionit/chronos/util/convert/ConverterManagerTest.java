@@ -130,7 +130,34 @@ public class ConverterManagerTest {
         assertNull(result);
     }
 
-    public class MockConverterA implements Converter<Customer, Name> {
+    @Test
+    public void testGetConverter_normal_default_get_by_class() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+        Converter<Customer, Name> converter1 = new MockConverterA();
+
+        manager.addConverter(converter1);
+
+        Converter<Customer, Name> result = manager.getConverter(MockConverterA.class);
+        assertNotNull(result);
+        assertEquals(converter1, result);
+    }
+
+    @Test
+    public void testGetConverter_not_registered_default_get_by_class() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+
+        Converter<Customer, Name> result = manager.getConverter(MockConverterA.class);
+        assertNull(result);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testGetConverter_class_is_null_error() throws Exception {
+        ConverterManager manager = ConverterManager.getInstance();
+
+        manager.getConverter(null);
+    }
+
+    public static class MockConverterA implements Converter<Customer, Name> {
         @Override
         public void convert(Customer src, Name dest) {
         }
@@ -141,7 +168,7 @@ public class ConverterManagerTest {
         }
     }
 
-    public class MockConverterB implements Converter<Customer, Name> {
+    public static class MockConverterB implements Converter<Customer, Name> {
         @Override
         public void convert(Customer src, Name dest) {
         }
@@ -152,7 +179,7 @@ public class ConverterManagerTest {
         }
     }
 
-    public class MockConverterC implements Converter<Order, OrderDto> {
+    public static class MockConverterC implements Converter<Order, OrderDto> {
         @Override
         public void convert(Order src, OrderDto dest) {
         }
