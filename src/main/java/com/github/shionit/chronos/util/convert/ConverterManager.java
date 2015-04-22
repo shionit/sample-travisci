@@ -34,8 +34,8 @@ public class ConverterManager {
         if (name == null || name.isEmpty()) {
             name = DEFAULT_CONVERTER_NAME;
         }
-        Class<?>[] typeArguments = TypeResolver.resolveArguments(converter.getClass(), Converter.class);
-        ConverterCacheKey key = new ConverterCacheKey(typeArguments[0], typeArguments[1], name);
+        final Class<?>[] typeArguments = TypeResolver.resolveArguments(converter.getClass(), Converter.class);
+        final ConverterCacheKey key = new ConverterCacheKey(typeArguments[0], typeArguments[1], name);
 
         if (null != cache.putIfAbsent(key, converter)) {
             throw new IllegalStateException("converter key is already exists." + key.toString());
@@ -51,7 +51,14 @@ public class ConverterManager {
         Objects.requireNonNull(sourceClass, "sourceClass");
         Objects.requireNonNull(destClass, "destClass");
         Objects.requireNonNull(name, "name");
-        ConverterCacheKey key = new ConverterCacheKey(sourceClass, destClass, name);
+        final ConverterCacheKey key = new ConverterCacheKey(sourceClass, destClass, name);
+        return cache.get(key);
+    }
+
+    public final <S, D> Converter<S, D> getConverter(final Class<? extends Converter<S, D>> converterClass) {
+        Objects.requireNonNull(converterClass, "converterClass");
+        final Class<?>[] typeArguments = TypeResolver.resolveArguments(converterClass, Converter.class);
+        final ConverterCacheKey key = new ConverterCacheKey(typeArguments[0], typeArguments[1], DEFAULT_CONVERTER_NAME);
         return cache.get(key);
     }
 
@@ -69,18 +76,6 @@ public class ConverterManager {
             this.sourceClass = sourceClass;
             this.destClass = destClass;
             this.name = name;
-        }
-
-        public Class<?> getSourceClass() {
-            return sourceClass;
-        }
-
-        public Class<?> getDestClass() {
-            return destClass;
-        }
-
-        public String getName() {
-            return name;
         }
 
         @Override
