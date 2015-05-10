@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class BulkOrderConverter implements Converter<BulkOrder, BulkOrderDto> {
 
+    // TODO:not new Converter.
+    // -> Inject ConverterManager and getConverter()
     private GetterSetterService orderConverter = new GetterSetterService();
 
     @Override
