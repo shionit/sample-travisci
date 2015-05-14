@@ -4,32 +4,28 @@ import org.modelmapper.internal.util.TypeResolver;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by @shionit on 2015/04/19.
  */
-public class ConverterManager {
-
-    private static final ConverterManager INSTANCE = new ConverterManager();
+public final class ConverterManager {
 
     private static final String DEFAULT_CONVERTER_NAME = "default";
 
     @SuppressWarnings("rawtypes")
-    private static final ConcurrentHashMap<ConverterCacheKey, Converter> cache = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ConverterCacheKey, Converter> cache = new ConcurrentHashMap<>();
 
-    private ConverterManager() {
+    ConverterManager(Set<Converter> converters) {
+        converters.forEach(this::addConverter);
     }
 
-    public static ConverterManager getInstance() {
-        return INSTANCE;
-    }
-
-    public final <S, D> void addConverter(final Converter<S, D> converter) {
+    private <S, D> void addConverter(final Converter<S, D> converter) {
         addConverter(converter, null);
     }
 
-    public final <S, D> void addConverter(final Converter<S, D> converter, String name) {
+    private <S, D> void addConverter(final Converter<S, D> converter, String name) {
         Objects.requireNonNull(converter, "converter");
         if (name == null || name.isEmpty()) {
             name = DEFAULT_CONVERTER_NAME;
@@ -39,6 +35,9 @@ public class ConverterManager {
 
         if (null != cache.putIfAbsent(key, converter)) {
             throw new IllegalStateException("converter key is already exists." + key.toString());
+        }
+        if (converter instanceof ConverterManagerAware) {
+            ((ConverterManagerAware) converter).setConverterManager(this);
         }
     }
 
@@ -62,10 +61,6 @@ public class ConverterManager {
         return cache.get(key);
     }
 
-    protected final void clear() {
-        cache.clear();
-    }
-
     @SuppressWarnings("serial")
     private class ConverterCacheKey implements Serializable {
         private final Class<?> sourceClass;
@@ -80,11 +75,11 @@ public class ConverterManager {
 
         @Override
         public String toString() {
-            return "ConverterCacheKey{" +
+            return "ConverterCacheKey[" +
                     "sourceClass=" + sourceClass +
-                    ", destClass=" + destClass +
-                    ", name='" + name + '\'' +
-                    '}';
+                    ",destClass=" + destClass +
+                    ",name='" + name + '\'' +
+                    ']';
         }
 
         @Override
@@ -102,10 +97,27 @@ public class ConverterManager {
 
         @Override
         public int hashCode() {
-            int result = sourceClass.hashCode();
-            result = 31 * result + destClass.hashCode();
-            result = 31 * result + name.hashCode();
-            return result;
+            return Objects.hash(sourceClass, destClass, name);
+        }
+    }
+
+    public static class Builder {
+        private ConverterManager instance;
+
+        public Builder(Set<Converter> converters) {
+            instance = new ConverterManager(converters);
+        }
+
+        public void addConverter(Converter converter) {
+            instance.addConverter(converter);
+        }
+
+        public void addConverter(Converter converter, String name) {
+            instance.addConverter(converter, name);
+        }
+
+        public ConverterManager build() {
+            return instance;
         }
     }
 }
