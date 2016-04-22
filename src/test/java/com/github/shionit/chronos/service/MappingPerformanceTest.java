@@ -15,7 +15,7 @@ import static com.github.shionit.chronos.service.MappingServiceTestSupport.creat
  */
 public class MappingPerformanceTest {
 
-    private static final int MAX_COUNT = 1000000;
+    private static final int MAX_COUNT = 10000;
 
     private final ModelMapperService modelmapper = new ModelMapperService();
     private final GetterSetterService getset = new GetterSetterService();
