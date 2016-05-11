@@ -1,3 +1,5 @@
 language: java
 jdk:
   - oraclejdk8
+notifications:
+  slack: skyblue-logic:4Xfq0YZ46hRJU4VlsFcZbLxN
