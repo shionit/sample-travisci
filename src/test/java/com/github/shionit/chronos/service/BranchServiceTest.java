@@ -15,13 +15,7 @@ public class BranchServiceTest {
 
     @Test
     public void testCreateDefaultBranch() throws Exception {
-        //BranchService target = new BranchService(() -> new Branch());
-        BranchService target = new BranchService(new Supplier<IBranch>() {
-            @Override
-            public IBranch get() {
-                return new Branch();
-            }
-        });
+        BranchService target = new BranchService(() -> new Branch());
 
         final Branch result1 = (Branch) target.createDefaultBranch();
         final Branch result2 = (Branch) target.createDefaultBranch();
